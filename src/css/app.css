@@ -1,0 +1,43 @@
+.time-zone {
+    width: 100%;
+    padding: 10px;
+
+    background: white;
+    border: 1px solid gray;
+}
+
+.marginTop50 {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.days:nth-child(odd) {
+    color: red;
+    background: darkgray;
+    padding-right: 0;
+}
+
+.days:nth-child(even) {
+    color: red;
+    background: lightgray;
+    padding-right: 0;
+}
+
+.days-container {
+    padding-top: 20px;
+    padding-left: 13px;
+}
+
+.formDisplay {
+    display: inline-block;
+}
+
+.timesColors {
+    color: black;
+    background: white !important;
+}
+
+.formDisplayContainer {
+    display: inline-block;
+    width: 100px;
+}
