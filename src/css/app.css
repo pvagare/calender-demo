@@ -15,12 +15,14 @@
     color: red;
     background: darkgray;
     padding-right: 0;
+    margin-left: 0;
 }
 
 .days:nth-child(even) {
     color: red;
     background: lightgray;
     padding-right: 0;
+    margin-left: 0;
 }
 
 .days-container {
@@ -35,6 +37,8 @@
 .timesColors {
     color: black;
     background: white !important;
+    border-bottom: 1px solid lightgray;
+    padding: 20px;
 }
 
 .formDisplayContainer {

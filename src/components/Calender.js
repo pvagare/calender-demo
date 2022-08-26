@@ -10,36 +10,55 @@ import Form from 'react-bootstrap/Form';
 
 function Calender(props) {
     const today = new Date();
-    // const numberOfDaysToAdd = 3;
-    // const date = today.setDate(today.getDate() + numberOfDaysToAdd);
-    const defaultValue = today.toISOString().split('T')[0]
+    const defaultValue = today.toISOString().split('T')[0];
+
     let [currentDate, setCurrentDate] = useState();
     let [oldPrevDate, setOldPrevDate] = useState();
+    let [timezone, setTimezone] = useState(5.30);
 
     let [weekDaysArray, setWeekDaysArray] = useState([]);
+
+
+    const getMondayOfCurrentWeek = () => {
+        const today = new Date();
+        const first = today.getDate() - today.getDay() + 1;
+        const monday = new Date(today.setDate(first));
+        return monday;
+    }
 
     useState(() => {
         setCurrentDate(defaultValue)
         props.getTimes();
         props.getTimeZones();
         today.getDay();
-        
+        let name = today.toLocaleDateString('en-us', { weekday: 'short' });
         let items = []
-        for (let index = today.getDay(); index <= 5; index++) {
+        let currentMonday = getMondayOfCurrentWeek();
+
+        for (let index = currentMonday.getDay(); index <= 5; index++) {
             var item = {
                 timeZone: props.timeList,
-                dayName: props.days[index - 1]
+                dayName: name,
+                date: (currentMonday.getMonth() + 1) + "/" + currentMonday.getDate(),
+                isPast: false
             }
+
+            if (today > currentMonday) {
+                item.isPast = true
+            }
+
             items.push(item)
+            currentMonday.setDate(currentMonday.getDate() + 1);
+
         }
         setWeekDaysArray(items)
         setOldPrevDate(today);
+        setTimezone(5.30);
     }, []);
 
     const onTimeSelect = (e) => {
-
+        setTimezone(e.currentTarget.value);
     }
-    // let day = today.getDay();
 
     const renderItems = (item) => {
         return (item.map((current) => {
@@ -52,9 +71,30 @@ function Calender(props) {
         }))
     }
 
+    const getCurrentMonday = (value) => {
+        const today = new Date(value)
+        const first = today.getDate() - today.getDay() + 1;
+        const monday = new Date(today.setDate(first));
+        return monday;
+    }
+
     const selectCurrentDate = (item) => {
         setCurrentDate(item.currentTarget.value);
-        oldPrevDate(new Date(item.currentTarget.value));
+        setOldPrevDate(new Date(item.currentTarget.value));
+        let currentMonday = getCurrentMonday(item.currentTarget.value);
+        let name = today.toLocaleDateString('en-us', { weekday: 'short' });
+        var items = [];
+        for (let index = currentMonday.getDay(); index <= 5; index++) {
+            var dataItem = {
+                timeZone: props.timeList,
+                dayName: name,
+                date: (currentMonday.getMonth() + 1) + "/" + currentMonday.getDate(),
+                isPast: false
+            }
+            items.push(dataItem)
+            currentMonday.setDate(currentMonday.getDate() + 1);
+        }
+        setWeekDaysArray(items)
     }
 
     const prevWeek = (item) => {
@@ -73,12 +113,12 @@ function Calender(props) {
             }
             firstTime = false;
             let name = nextDate.toLocaleDateString('en-us', { weekday: 'short' });
-            var item = {
+            var dataItem = {
                 timeZone: props.timeList,
                 dayName: name,
                 date: (nextDate.getMonth() + 1) + "/" + nextDate.getDate()
             }
-            items.push(item)
+            items.push(dataItem)
         }
         setWeekDaysArray(items)
 
@@ -101,13 +141,14 @@ function Calender(props) {
             }
             firstTime = false;
             let name = nextDate.toLocaleDateString('en-us', { weekday: 'short' });
-            var item = {
+            var dataItem = {
                 timeZone: props.timeList,
                 dayName: name,
                 date: (nextDate.getMonth() + 1) + "/" + nextDate.getDate()
             }
-            items.push(item)
+            items.push(dataItem)
         }
+
         setWeekDaysArray(items)
 
         setOldPrevDate(nextDate);
@@ -123,10 +164,10 @@ function Calender(props) {
             <Row>
                 <Col>
                     <div className="marginTop50"> Timezones: </div>
-                    <select className="time-zone" onChange={onTimeSelect}>
+                    <select className="time-zone" onChange={onTimeSelect} value={timezone}>
                         {
                             props.timeZones.map((item) => {
-                                return <option value={item.value}> {item.name} </option>
+                                return <option value={item.offset}> {item.name} </option>
                             })
                         }
                     </select>
@@ -147,12 +188,13 @@ function Calender(props) {
                                         item.date
                                     }
                                 </div>
-
                             </Col>
 
                             <Col md={9} className="timesColors">
 
-                                {renderItems(item.timeZone)}
+                                {
+                                    item.isPast ? "Past" :
+                                        renderItems(item.timeZone)}
                             </Col>
 
                         </Row>

@@ -39,12 +39,14 @@ const initialState = {
 
     timeZones: [
         {
-            name: "(UTC+00:00) Coordinated Universal Time",
-            value: 'Europe/London'
+            name: "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi",
+            value: 'Asia/Kolkata',
+            offset: 5.30
         },
         {
-            name: "(UTC+05:30) Chennai, Kolkata, Mumbai, New Delhi",
-            value: 'Asia/Kolkata'
+            name: "(UTC+00:00) Coordinated Universal Time (London)",
+            value: 'Europe/London',
+            offset: 0
         }
     ]
 }
